@@ -8,3 +8,7 @@
 ## Task 2 - Math operations
 
 ![Screenshot](img/task2.png)
+
+## Task 3 - FizzBuzz
+
+![Screenshot](img/task3.png)
