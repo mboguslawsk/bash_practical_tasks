@@ -66,4 +66,5 @@ nproc >> $FILENAME
 
 FREQ=$( cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' )
 echo -n "Frequency: $FREQ MHz" >> $FILENAME
+echo >> $FILENAME
 
