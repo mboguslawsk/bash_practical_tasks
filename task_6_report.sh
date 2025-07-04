@@ -63,5 +63,5 @@ free -h | sed -n "2p" | awk '{print "Total RAM:", $2, "; Free RAM:", $6}' >> $FI
 echo -n "Number of CPU Cores: " >> $FILENAME
 nproc >> $FILENAME
 
-echo ". Frequency: " >> $FILENAME
+echo -n ". Frequency: " >> $FILENAME
 cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' >> $FILENAME
