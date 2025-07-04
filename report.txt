@@ -1,0 +1,13 @@
+Fri Jul  4 16:46:26 CEST 2025
+User: mboguslawski
+Hostname: C12483
+
+Internal IP address: 192.168.0.194
+
+External IP address: 2a02:a311:a3d2:bf00:6914:3fb7:53ae:426b
+Kernel name: Darwin
+Kernel version: 24.5.0
+
+System uptime: 5:08
+
+Used: 
