@@ -12,3 +12,7 @@
 ## Task 3 - FizzBuzz
 
 ![Screenshot](img/task3.png)
+
+## Task 4 - Cipher
+
+![Screenshot](img/task4.png)

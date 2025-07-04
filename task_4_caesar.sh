@@ -21,14 +21,63 @@ while getopts ":s:i:o:" opt; do
     esac
 done
 
+echo ""
+
 if [[ -f $INPUTFILE ]]; then
-    echo "Text before cipher:"
-    cat $INPUTFILE
+    echo "Input file $INPUTFILE exists."
+    echo ""
 else
-    echo "File doesn't exists"
+    echo "Input file $INPUTFILE doesn't exist."
+    exit 1
 fi
 
-while IFS= read -r -n1 char; do
-    echo "CHar: $char"
-done < $INPUTFILE
+if [[ -f $OUTPUTFILE ]]; then
+    echo "Output file $OUTPUTFILE exists."
+    : > $OUTPUTFILE
+    echo "File $OUTPUTFILE has been cleared."
+    echo ""
+else
+    echo "Output file $OUTPUTFILE doesn't exists"
+    touch $OUTPUTFILE
+    echo "File $OUTPUTFILE has been created"
+    echo ""
+fi
 
+cat -e $INPUTFILE | while IFS= read -r -n1 char; do
+    NEWCHAR=""
+    for i in "${!ALPHABET[@]}"; do
+        if [[ "${ALPHABET[i]}" == "${char^^}" ]]; then
+            NEWINDEX=$(( i + SHIFT ))
+            if [[ $NEWINDEX -gt "${#ALPHABET[@]}" ]]; then
+                NEWINDEX=$(( 0 - (${#ALPHABET[@]} - NEWINDEX) ))
+                NEWCHAR="${ALPHABET[NEWINDEX]}"
+                if [[ "$char" =~ [a-z] ]]; then
+                    NEWCHAR="${NEWCHAR,,}"
+                fi
+            else
+                NEWCHAR="${ALPHABET[NEWINDEX]}"
+                if [[ "$char" =~ [a-z] ]]; then
+                    NEWCHAR="${NEWCHAR,,}"
+                fi
+            fi
+        fi
+    done
+    
+    if [[ "${char}" == '$' ]]; then
+        echo "" >> $OUTPUTFILE
+    elif [[ "${NEWCHAR}" == "" ]]; then
+        NEWCHAR="${char}"
+    fi
+    
+    echo -n "${NEWCHAR}" >> $OUTPUTFILE
+done
+
+echo ""
+echo "Text before cipher:"
+echo ""
+cat $INPUTFILE
+echo ""
+echo ""
+echo "Text before cipher:"
+echo ""
+cat $OUTPUTFILE
