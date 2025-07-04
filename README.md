@@ -16,3 +16,7 @@
 ## Task 4 - Cipher
 
 ![Screenshot](img/task4.png)
+
+## Task 5 - String functionality
+
+![Screenshot](img/task5.png)
