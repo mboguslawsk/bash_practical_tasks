@@ -64,5 +64,5 @@ echo >> $FILENAME
 echo -n "Number of CPU Cores: " >> $FILENAME
 nproc >> $FILENAME
 
-echo -n "Frequency: " >> $FILENAME
-cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' >> $FILENAME
+echo -n "Frequency: $( cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' >> $FILENAME ) MHz" >> $FILENAME
+
