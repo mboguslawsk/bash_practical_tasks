@@ -20,3 +20,7 @@
 ## Task 5 - String functionality
 
 ![Screenshot](img/task5.png)
+
+## Task 6 - Report
+
+![Screenshot](img/task6.png)
