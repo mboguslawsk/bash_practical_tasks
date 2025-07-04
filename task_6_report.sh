@@ -46,8 +46,22 @@ echo -n "System uptime: " >> $FILENAME
 uptime | awk -F ',' '{print $1}' | awk -F ' ' '{print $3}' >> $FILENAME
 echo >> $FILENAME
 
-echo -n "Used: " >> $FILENAME
-sed -n '7p' $( top ) | awk '{print $2}' >> $FILENAME
-echo -n "and free: " >> $FILENAME
-sed -n '7p' $( top ) | awk '{print $8}' >> $FILENAME
-echo " memory." >> $FILENAME
+
+USED_MEM=$( df -h / | tail -n 1 | awk '{print $3}' )
+USED_MEM=${USED_MEM%Gi}
+USED_MEM_GB=$(echo "$USED_MEM * 8.5899" | bc)
+echo -n "Used memory: $USED_MEM_GB GB" >> $FILENAME
+
+FREE_MEM=$( df -h / | tail -n 1 | awk '{print $4}' )
+FREE_MEM=${FREE_MEM%Gi}
+FREE_MEM_GB=$(echo "$FREE_MEM * 8.5899" | bc)
+echo -n ". Free space: $FREE_MEM_GB GB " >> $FILENAME
+
+echo >> $FILENAME
+free -h | sed -n "2p" | awk '{print "Total RAM:", $2, "; Free RAM:", $6}' >> $FILENAME
+
+echo -n "Number of CPU Cores: " >> $FILENAME
+nproc >> $FILENAME
+
+echo ". Frequency: " >> $FILENAME
+cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' >> $FILENAME
