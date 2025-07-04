@@ -73,11 +73,11 @@ cat -e $INPUTFILE | while IFS= read -r -n1 char; do
 done
 
 echo ""
-echo "Text before cipher:"
+echo "Text before ciphering:"
 echo ""
 cat $INPUTFILE
 echo ""
 echo ""
-echo "Text before cipher:"
+echo "Text after ciphering:"
 echo ""
 cat $OUTPUTFILE
