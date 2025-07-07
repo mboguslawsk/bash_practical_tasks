@@ -70,13 +70,13 @@ Deletes rows from a table where the specified field matches the given value.
 - **Fields:** Up to 4 per table, each limited to 5 characters of actual content  
 - **Cells:** Rendered as: `** data **` (8 characters total per cell)
 
-![Screenshot](img/task_advanced_1.png)
+<img src="img/task_advanced_1.png" alt="Screenshot" width="50%">
 
 ---
 
 #### Example Table Layout
 
-![Table Screenshot](img/task_advanced_2.png)
+<img src="img/task_advanced_2.png" alt="Screenshot" width="50%">
 
 ---
 
@@ -86,7 +86,7 @@ This utility performs strict validation on inputs. If a value exceeds its allowe
 
 **Example: Inserting a too-long value:**
 
-![Error Screenshot](img/task_advanced_5.png)
+<img src="img/task_advanced_5.png" alt="Screenshot" width="50%">
 
 ---
 
@@ -94,23 +94,29 @@ This utility performs strict validation on inputs. If a value exceeds its allowe
 
 #### 1. Create a database named `Kitty`
 ```bash task_advanced.sh create_db kitty```
-![Screenshot](img/task_advanced_3.png)
+
+<img src="img/task_advanced_3.png" alt="Screenshot" width="50%">
 
 #### 2. Create a table KittyTypes with fields:
 ```bash task_advanced.sh create_table kitty KittyTypes Color age ears nose```
-![Screenshot](img/task_advanced_4.png)
+
+<img src="img/task_advanced_4.png" alt="Screenshot" width="50%">
 
 #### 3. Insert a record:
 ```bash task_advanced.sh insert_data kitty KittyTypes Green 1 Big Small```
-![Screenshot](img/task_advanced_6.png)
+
+<img src="img/task_advanced_6.png" alt="Screenshot" width="50%">
 
 #### 4. View table contents:
 ```bash task_advanced.sh select_data kitty KittyTypes```
-![Screenshot](img/task_advanced_7.png)
+
+<img src="img/task_advanced_7.png" alt="Screenshot" width="50%">
 
 #### 5. Delete records where Color=Green:
 ```bash task_advanced.sh delete_data kitty KittyTypes “Color=Green”```
-![Screenshot](img/task_advanced_8.png)
+
+<img src="img/task_advanced_8.png" alt="Screenshot" width="50%">
+
 
 ---
 
