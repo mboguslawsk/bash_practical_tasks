@@ -20,32 +20,33 @@ else
     echo "File $FILENAME already exists. File has been cleaned."
 fi
 
-date >> $FILENAME
+{
+    date;
 
-echo "User: $USER" >> $FILENAME
+    echo "User: $USER";
 
-echo -n "Hostname: " >> $FILENAME
-hostname >> $FILENAME
-echo  >> $FILENAME
+    echo -n "Hostname: ";
+    hostname;
+    echo;
 
-echo -n "Internal IP address: " >> $FILENAME
-ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' >> $FILENAME
-echo >> $FILENAME
+    echo -n "Internal IP address: ";
+    ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}';
+    echo;
 
-echo -n "External IP address: " >> $FILENAME
-curl -s https://ifconfig.me >> $FILENAME
-echo >> $FILENAME
+    echo -n "External IP address: ";
+    curl -s https://ifconfig.me;
+    echo;
 
-echo -n "Kernel name: " >> $FILENAME
-uname >> $FILENAME
-echo -n "Kernel version: " >> $FILENAME
-uname -r >> $FILENAME
-echo >> $FILENAME
+    echo -n "Kernel name: ";
+    uname;
+    echo -n "Kernel version: ";
+    uname -r;
+    echo;
 
-echo -n "System uptime: " >> $FILENAME
-uptime | awk -F ',' '{print $1}' | awk -F ' ' '{print $3}' >> $FILENAME
-echo >> $FILENAME
-
+    echo -n "System uptime: ";
+    uptime | awk -F ',' '{print $1}' | awk -F ' ' '{print $3}';
+    echo;
+} >> $FILENAME
 
 USED_MEM=$( df -h / | tail -n 1 | awk '{print $3}' )
 USED_MEM=${USED_MEM%Gi}
@@ -55,16 +56,19 @@ echo -n "Used memory: $USED_MEM_GB GB" >> $FILENAME
 FREE_MEM=$( df -h / | tail -n 1 | awk '{print $4}' )
 FREE_MEM=${FREE_MEM%Gi}
 FREE_MEM_GB=$(echo "$FREE_MEM * 8.5899" | bc)
-echo -n ". Free space: $FREE_MEM_GB GB " >> $FILENAME
+FREQ=$( grep "MHz" /proc/cpuinfo  | sed -n "1p" | awk -F ': ' '{print $2}' )
 
-echo >> $FILENAME
-free -h | sed -n "2p" | awk '{print "Total RAM:", $2, "; Free RAM:", $6}' >> $FILENAME
+{
+    echo -n ". Free space: $FREE_MEM_GB GB ";
 
-echo >> $FILENAME
-echo -n "Number of CPU Cores: " >> $FILENAME
-nproc >> $FILENAME
+    echo;
+    free -h | sed -n "2p" | awk '{print "Total RAM:", $2, "; Free RAM:", $6}';
 
-FREQ=$( cat /proc/cpuinfo | grep "MHz" | sed -n "1p" | awk -F ': ' '{print $2}' )
-echo -n "Frequency: $FREQ MHz" >> $FILENAME
-echo >> $FILENAME
+    echo;
+    echo -n "Number of CPU Cores: ";
+    nproc;
+
+    echo -n "Frequency: $FREQ MHz";
+    echo;
+ } >> $FILENAME
 

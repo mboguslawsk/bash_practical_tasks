@@ -13,6 +13,6 @@ for i in {1..100}; do
     elif [[ $((i % 3)) -eq 0 ]]; then
        echo "Fizz"
     else
-        echo $i
+        echo "$i"
     fi
 done

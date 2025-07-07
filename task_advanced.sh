@@ -97,13 +97,13 @@ function create_db() {
     fi
 
     if [[ -f $db_name ]]; then
-        : > $db_name
+        : > "$db_name"
         echo "Database with that name '$db_name' is already exists. Database has been cleared."
-        echo "DATABASE \"$db_name\"" >> $db_name
+        echo "DATABASE \"$db_name\"" >> "$db_name"
     else
-        touch $db_name
+        touch "$db_name"
         echo "Database \"$db_name\" has been created."
-        echo "DATABASE \"$db_name\"" >> $db_name
+        echo "DATABASE \"$db_name\"" >> "$db_name"
     fi
 }
 
@@ -121,13 +121,13 @@ function create_table() {
     db_name=$1
     table_name=$2
     shift 2
-    fields_name=($@)
+    fields_name=("$@")
 
     number_of_fields="${#fields_name[@]}"
     stars=""
 
 
-    if [[ -z $db_name ]] || [[ -z $table_name ]] || [[ -z $fields_name ]]; then
+    if [[ -z $db_name ]] || [[ -z $table_name ]] || [[ -z "${fields_name[*]}" ]]; then
         echo "Please. Provide appropriate arguments."
         print_usage
         exit 1
@@ -148,45 +148,47 @@ function create_table() {
     fi
 
     echo ""
-    echo "Fields names "${fields_name[@]}" are correct."
+    echo "Fields names " "${fields_name[@]}" " are correct."
     echo ""
 
-    echo "" >> $db_name
-    echo "" >> $db_name
-    echo "== TABLE \"$table_name\" ==" >> $db_name
+    {
+        echo "";
+        echo "";
+        echo "== TABLE \"$table_name\" ==";
+    } >> "$db_name"
     
     # Stars in the beginning printing
     case $number_of_fields in
         1)
             stars=$( printf '*%.0s' {1..11} )
-            echo "${stars}" >> $db_name
+            echo "${stars}" >> "$db_name"
             ;;
         2)
             stars=$( printf '*%.0s' {1..20} )
-            echo "${stars}" >> $db_name
+            echo "${stars}" >> "$db_name"
             ;;
         3)
             stars=$( printf '*%.0s' {1..29} )
-            echo "${stars}" >> $db_name
+            echo "${stars}" >> "$db_name"
             ;;
         4)
             stars=$( printf '*%.0s' {1..39} )
-            echo "${stars}" >> $db_name
+            echo "${stars}" >> "$db_name"
             ;;
     esac
 
 
     for i in "${!fields_name[@]}"; do      # Number of characters in one field check
         length=${#fields_name[i]}
-        padding=$(( $MAX_SYMBOLS - $length ))
+        padding=$(( MAX_SYMBOLS - length ))
         exit_field=$( printf '%*s' "${padding}" '')
         exit_field="${fields_name[i]}${exit_field}"
-        echo -n "** ${exit_field} **" >> $db_name
+        echo -n "** ${exit_field} **" >> "$db_name"
     done
-    echo "Table \"${table_name}\" with fields ${fields_name[@]} has been created."
+    echo "Table \"${table_name}\" with fields ${fields_name[*]} has been created."
     sed -i '' "s/\\*\\*\\*\\* /\\*\\* /g" "${db_name}"
-    echo "" >> $db_name
-    echo "${stars}" >> $db_name
+    echo "" >> "$db_name"
+    echo "${stars}" >> "$db_name"
 }
 
 
@@ -214,9 +216,9 @@ function select_data() {
         line=$( sed -n "${line_number}p" "$db_name" )
         printf '%s\n' "$line"
         if [[ $line =~ '*******' ]]; then
-            table_scope=$(( $table_scope - 1 ))
+            table_scope=$(( table_scope - 1 ))
         fi
-        line_number=$(( $line_number + 1 ))
+        line_number=$(( line_number + 1 ))
     done
 }
 
@@ -244,12 +246,12 @@ function delete_data() {
 
     line_number=$( grep -n "== TABLE \"$table_name\" ==" "$db_name" | awk -F ':' '{print $1}' )
 
-    fields_names=($( sed -n "$(( $line_number + 2 ))p" "$db_name" | awk -F '\\*\\*' '{for (i=2; i<NF; i++) print $i}'))
+    fields_names=("$( sed -n "$(( line_number + 2 ))p" "$db_name" | awk -F '\\*\\*' '{for (i=2; i<NF; i++) print $i}')")
 
     
-    for i in ${!fields_names[@]}; do
-        if [[ ${fields_names[i]} == $column_row_to_delete ]]; then
-            index_of_field=$(( $i + 2 ))
+    for i in "${!fields_names[@]}"; do
+        if [[ ${fields_names[i]} == "$column_row_to_delete" ]]; then
+            index_of_field=$(( i + 2 ))
         fi
     done
 
@@ -266,14 +268,14 @@ function delete_data() {
             analysed_value="$( echo $analysed_value )"
             if [[ "${analysed_value}" == "${column_value_to_delete}" ]]; then
                 sed -i '' "${line_number}d" "${db_name}"
-                line_number=$(( $line_number - 1 ))
+                line_number=$(( line_number - 1 ))
                 deleted=true
             fi
         fi
         if [[ $line =~ '*******' ]]; then
-            table_scope=$(( $table_scope - 1 ))
+            table_scope=$(( table_scope - 1 ))
         fi
-        line_number=$(( $line_number + 1 ))
+        line_number=$(( line_number + 1 ))
     done
     if [[ "${deleted}" == "true" ]]; then
         echo "Data have been deleted."
@@ -291,11 +293,11 @@ function insert_data() {
     db_name=$1
     table_name=$2
     shift 2
-    insert_data=($@)
+    insert_data=("$@")
     table_scope=2       # start and the beginning of the table
 
 
-    if [[ -z $db_name ]] || [[ -z $table_name ]] || [[ -z $insert_data ]]; then
+    if [[ -z $db_name ]] || [[ -z $table_name ]] || [[ -z "${insert_data[*]}" ]]; then
         echo "Please. Provide appropriate arguments."
         print_usage
         exit 1
@@ -307,7 +309,7 @@ function insert_data() {
         exit 1
     fi
 
-    fields_names=($( sed -n "$(( $line_number + 2 ))p" "$db_name" | awk -F '\\*\\*' '{for (i=2; i<NF; i++) print $i}'))
+    fields_names=("$( sed -n "$(( line_number + 2 ))p" "$db_name" | awk -F '\\*\\*' '{for (i=2; i<NF; i++) print $i}')")
     if [[ ${#insert_data[@]} -ne ${#fields_names[@]} ]]; then     # Check if number of provided arguments equals to the number of fields in the table
         echo "The number of provided data values is incorrect. Please provide data for all ${#fields_names} fields."
         exit 1
@@ -317,9 +319,9 @@ function insert_data() {
     do
         line=$( sed -n "${line_number}p" "$db_name" )
         if [[ $line =~ '*******' ]]; then
-            table_scope=$(( $table_scope - 1 ))
+            table_scope=$(( table_scope - 1 ))
         fi
-        line_number=$(( $line_number + 1 ))
+        line_number=$(( line_number + 1 ))
     done
 
 
@@ -333,14 +335,14 @@ function insert_data() {
     tmp_var=""
     for i in "${!insert_data[@]}"; do      # Number of characters in one field check
         length=${#insert_data[i]}
-        padding=$(( $MAX_SYMBOLS - $length ))
+        padding=$(( MAX_SYMBOLS - length ))
         exit_field=$( printf '%*s' "${padding}" '')
         exit_field="${insert_data[i]}${exit_field}"
-        tmp_var="${tmp_var}** ${exit_field} **" >> $db_name
+        tmp_var="${tmp_var}** ${exit_field} **" >> "$db_name"
     done
 
     data_to_insert=$( echo "${tmp_var}" | sed "s/\\*\\*\\*\\* /\\*\\* /g" )
-    line_before_insertion="$(( $line_number - 1 ))i"
+    line_before_insertion="$(( line_number - 1 ))i"
     sed -i '' "${line_before_insertion}\\ 
 $data_to_insert
 " "${db_name}"    # Paste data before the end of the table
@@ -351,7 +353,7 @@ $data_to_insert
 FUNC_NAME=$1
 shift
 
-if declare -f $FUNC_NAME > /dev/null && [[ ${#@} -ne 0 ]]; then
+if declare -f "$FUNC_NAME" > /dev/null && [[ ${#@} -ne 0 ]]; then
     echo "Function $FUNC_NAME exists"
     "${FUNC_NAME}" "${@}"
 else

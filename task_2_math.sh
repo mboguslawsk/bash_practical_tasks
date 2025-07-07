@@ -31,16 +31,16 @@ for (( i = 0; i < ${#NUMBERS[@]}; i++)); do
     number="${NUMBERS[i]}"
     case $OPERATION in
         "-")
-            RESULT=$(($RESULT - $number))
+            RESULT=$((RESULT - number))
             ;;
         "+")
-            RESULT=$(($RESULT + $number))
+            RESULT=$((RESULT + number))
             ;;
         "*")
-            RESULT=$(($RESULT * $number))
+            RESULT=$((RESULT * number))
             ;;
         "%")
-            RESULT=$(($RESULT % $number))
+            RESULT=$((RESULT % number))
             ;;
     esac
 done
@@ -53,5 +53,5 @@ if [[ "$INFO_STATUS" == true ]]; then
         echo "User: $USER"
         echo "Script: $0"      
         echo "Operation: $OPERATION"
-        echo "Numbers: ${NUMBERS[@]}"
+        echo "Numbers:" "${NUMBERS[@]}"
 fi

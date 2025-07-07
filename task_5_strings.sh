@@ -8,7 +8,7 @@
 #If -u is passed, script converts all the text to upper case
 #Script should work with -i <input file> -o <output file> tags
 
-ALLARGS=($@)
+ALLARGS=("$@")
 OUTFILE=false
 INFILE=false
 CASE_STATUS=false
@@ -19,7 +19,7 @@ INPUTFILENAME=""
 
 echo ""
 
-for i in ${!ALLARGS[@]};do
+for i in "${!ALLARGS[@]}";do
     if [[ ${ALLARGS[i]} == "-i" ]] && [[ -f ${ALLARGS[i+1]} ]]; then
         INPUTFILENAME="${ALLARGS[i+1]}"
         INFILE=true
@@ -28,18 +28,18 @@ for i in ${!ALLARGS[@]};do
     if [[ ${ALLARGS[i]} == "-o" ]]; then 
         OUTPUTFILENAME="${ALLARGS[i+1]}"
         if [[ ! -f "${OUTPUTFILENAME}" ]]; then
-            touch $OUTPUTFILENAME 2> /dev/null
-            if [[ $? -ne 0 ]]; then
+            if ! touch "$OUTPUTFILENAME" 2> /dev/null; then
                 echo "Wrong output filename..."
                 exit 1
             fi
         else
-            : > $OUTPUTFILENAME
+            : > "$OUTPUTFILENAME"
             echo "Check output file. The file ${OUTPUTFILENAME} already exists. The file has been cleared."
         fi
         OUTFILE=true
     fi
 done
+
 
 if [[ $OUTFILE != true || $INFILE != true ]]; then
     echo "USAGE: Provide -o [output_file] -i [input_file] [additional_options]"
@@ -60,9 +60,9 @@ while [[ $# -gt 0 ]]; do
             A_WORD=$1
             B_WORD=$2
             if [[ $( wc -c < "$OUTPUTFILENAME" ) -ne 0 ]]; then
-                sed -i "s/${A_WORD}/${B_WORD}/g" $OUTPUTFILENAME
+                sed -i "s/${A_WORD}/${B_WORD}/g" "$OUTPUTFILENAME"
             else
-                sed "s/${A_WORD}/${B_WORD}/g" $INPUTFILENAME > $OUTPUTFILENAME
+                sed "s/${A_WORD}/${B_WORD}/g" "$INPUTFILENAME" > "$OUTPUTFILENAME"
             fi
             shift 2
             echo "-s -- Word ${A_WORD} has been replaced with ${B_WORD}."
@@ -70,33 +70,33 @@ while [[ $# -gt 0 ]]; do
         -r)
             shift
             if [[ $( wc -c < "$OUTPUTFILENAME" ) -ne 0 ]]; then
-                tail -r $OUTPUTFILENAME > tmp
-                cat tmp > $OUTPUTFILENAME
+                tail -r "$OUTPUTFILENAME" > tmp
+                cat tmp > "$OUTPUTFILENAME"
                 rm tmp
             else
-                tail -r $INPUTFILENAME > $OUTPUTFILENAME
+                tail -r "$INPUTFILENAME" > "$OUTPUTFILENAME"
             fi
             echo "-r -- Lines order has been reversed."
             ;;
         -l)
             shift
             if [[ $( wc -c < "$OUTPUTFILENAME" ) -ne 0 ]]; then
-                cat $OUTPUTFILENAME | tr [A-Z] [a-z] > tmp 
-                cat tmp > $OUTPUTFILENAME
+                tr 'A-Z' 'a-z' < "$OUTPUTFILENAME" > tmp
+                cat tmp > "$OUTPUTFILENAME"
                 rm tmp
             else
-                cat $INPUTFILENAME | tr [A-Z] [a-z] > $OUTPUTFILENAME
+                tr 'A-Z' 'a-z' < "$INPUTFILENAME" > "$OUTPUTFILENAME"
             fi
             echo "-l -- Lowercase has been applied"
             ;;
         -u)
             shift
             if [[ $( wc -c < "$OUTPUTFILENAME" ) -ne 0 ]]; then
-                cat $OUTPUTFILENAME | tr [a-z] [A-Z] > tmp 
-                cat tmp > $OUTPUTFILENAME
+                tr 'a-z' 'A-Z' < "$OUTPUTFILENAME" > tmp
+                cat tmp > "$OUTPUTFILENAME"
                 rm tmp
             else
-                cat $INPUTFILENAME | tr [a-z] [A-Z] > $OUTPUTFILENAME
+                tr 'a-z' 'A-Z' < "$INPUTFILENAME" > "$OUTPUTFILENAME"
             fi
             echo "-u -- Uppercase has been applied"
             ;;
@@ -112,7 +112,7 @@ done
 
 if [[ $CASE_STATUS == true ]]; then
     touch tmp
-    cat -e $OUTPUTFILENAME | while IFS= read -r -n1 CHAR; do
+    cat -e "$OUTPUTFILENAME" | while IFS= read -r -n1 CHAR; do
         if [[ $CHAR =~ [a-z] ]]; then
             echo -n "${CHAR^^}" >> tmp
         elif [[ $CHAR =~ [A-Z] ]]; then
@@ -123,7 +123,7 @@ if [[ $CASE_STATUS == true ]]; then
             echo -n "${CHAR}" >> tmp
         fi
     done
-    cat tmp > $OUTPUTFILENAME
+    cat tmp > "$OUTPUTFILENAME"
     rm tmp
     echo "-v -- Characters' cases have been reversed."
 fi
@@ -133,11 +133,11 @@ echo ""
 
 echo "Input file text '$INPUTFILENAME':"
 echo ""
-cat $INPUTFILENAME
+cat "$INPUTFILENAME"
 
 echo ""
 echo ""
 
 echo "Output file text '$OUTPUTFILENAME':"
 echo ""
-cat $OUTPUTFILENAME
+cat "$OUTPUTFILENAME"

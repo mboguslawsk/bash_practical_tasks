@@ -3,8 +3,6 @@
 echo "Enter 'n' number:"
 read n
 
-F0=0
-F1=1
 
 function fib() {
     
@@ -18,6 +16,6 @@ function fib() {
 
 }
 
-for (( i=0; i<=$n; i++ )); do
+for (( i=0; i<=n; i++ )); do
     echo -n "$(fib $i) "
 done

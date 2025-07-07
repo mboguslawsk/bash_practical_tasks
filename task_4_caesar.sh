@@ -18,6 +18,10 @@ while getopts ":s:i:o:" opt; do
         o)
             OUTPUTFILE="$OPTARG"
             ;;
+        *)
+            echo "There is not such flag: \"$opt\""
+            exit 1
+            ;;
     esac
 done
 
@@ -33,17 +37,17 @@ fi
 
 if [[ -f $OUTPUTFILE ]]; then
     echo "Output file $OUTPUTFILE exists."
-    : > $OUTPUTFILE
+    : > "$OUTPUTFILE"
     echo "File $OUTPUTFILE has been cleared."
     echo ""
 else
     echo "Output file $OUTPUTFILE doesn't exists"
-    touch $OUTPUTFILE
+    touch "$OUTPUTFILE"
     echo "File $OUTPUTFILE has been created"
     echo ""
 fi
 
-cat -e $INPUTFILE | while IFS= read -r -n1 char; do
+cat -e "$INPUTFILE" | while IFS= read -r -n1 char; do
     NEWCHAR=""
     for i in "${!ALPHABET[@]}"; do
         if [[ "${ALPHABET[i]}" == "${char^^}" ]]; then
@@ -64,20 +68,20 @@ cat -e $INPUTFILE | while IFS= read -r -n1 char; do
     done
     
     if [[ "${char}" == '$' ]]; then
-        echo "" >> $OUTPUTFILE
+        echo "" >> "$OUTPUTFILE"
     elif [[ "${NEWCHAR}" == "" ]]; then
         NEWCHAR="${char}"
     fi
     
-    echo -n "${NEWCHAR}" >> $OUTPUTFILE
+    echo -n "${NEWCHAR}" >> "$OUTPUTFILE"
 done
 
 echo ""
 echo "Text before ciphering:"
 echo ""
-cat $INPUTFILE
+cat "$INPUTFILE"
 echo ""
 echo ""
 echo "Text after ciphering:"
 echo ""
-cat $OUTPUTFILE
+cat "$OUTPUTFILE"

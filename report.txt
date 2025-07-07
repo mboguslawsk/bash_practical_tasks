@@ -1,13 +1,15 @@
-Fri Jul  4 17:06:57 CEST 2025
+Mon Jul  7 19:12:46 CEST 2025
 User: mboguslawski
 Hostname: C12483
 
 Internal IP address: 192.168.0.194
 
-External IP address: 2a02:a311:a3d2:bf00:6914:3fb7:53ae:426b
+External IP address: 2a02:a311:a3d2:bf00:3cce:89f0:ac29:386c
 Kernel name: Darwin
 Kernel version: 24.5.0
 
-System uptime: 5:28
+System uptime: 3
 
-Used memory: 85.8990 GB. Free space: 7610.6514 GB 
+Used memory: 85.8990 GB. Free space: 7602.0615 GB 
+
+Number of CPU Cores: Frequency:  MHz
