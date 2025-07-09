@@ -47,6 +47,10 @@ case $OPERATION in
     "%")
         RESULT="${NUMBERS[0]}"
         for (( i=1; i<"${#NUMBERS[@]}"; i++ )); do
+            if [[ "${NUMBERS[i]}" -eq 0 ]];then
+                echo "Division by 0. Exit ..."
+                exit 1
+            fi
             RESULT=$(( $RESULT % ${NUMBERS[i]}))
         done
         ;;
