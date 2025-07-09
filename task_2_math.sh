@@ -3,8 +3,6 @@
 OPERATION=""
 NUMBERS=()
 INFO_STATUS=false
-RESULT=0
-
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -14,7 +12,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -n)
             shift
-            while [[ $# -gt 0 && "$1" != "-*" ]]; do
+            while [[ $# -gt 0 && "$1" != -* ]]; do
                 NUMBERS+=("$1")
                 shift
             done
@@ -27,23 +25,36 @@ while [[ $# -gt 0 ]]; do
 done
 
 
-for (( i = 0; i < ${#NUMBERS[@]}; i++)); do
-    number="${NUMBERS[i]}"
-    case $OPERATION in
-        "-")
-            RESULT=$((RESULT - number))
-            ;;
-        "+")
-            RESULT=$((RESULT + number))
-            ;;
-        "*")
-            RESULT=$((RESULT * number))
-            ;;
-        "%")
-            RESULT=$((RESULT % number))
-            ;;
-    esac
-done
+case $OPERATION in
+    "-")
+        RESULT="${NUMBERS[0]}"
+        for (( i=1; i<"${#NUMBERS[@]}"; i++ )); do
+            RESULT=$(( $RESULT - ${NUMBERS[i]}))
+        done
+        ;;
+    "+")
+        RESULT="${NUMBERS[0]}"
+        for (( i=1; i<"${#NUMBERS[@]}"; i++ )); do
+            RESULT=$(( $RESULT + ${NUMBERS[i]}))
+        done
+        ;;
+    "*")
+        RESULT="${NUMBERS[0]}"
+        for (( i=1; i<"${#NUMBERS[@]}"; i++ )); do
+            RESULT=$(( $RESULT * ${NUMBERS[i]}))
+        done
+        ;;
+    "%")
+        RESULT="${NUMBERS[0]}"
+        for (( i=1; i<"${#NUMBERS[@]}"; i++ )); do
+            RESULT=$(( $RESULT % ${NUMBERS[i]}))
+        done
+        ;;
+    *)
+        echo "Unsupported operation: $OPERATION"
+        exit 1
+        ;;
+esac
 
 echo ""
 echo "Result is $RESULT"
